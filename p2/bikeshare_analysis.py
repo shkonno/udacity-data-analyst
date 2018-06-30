@@ -110,10 +110,17 @@ def load_data(city, month, day):
         df - Pandas DataFrame containing city data filtered by month and day
     """
     df = pd.read_csv(CITY_DATA[city])
+    df['month'] = df['Start Time'].dt.month
+    df['dayofweek'] = df['Start Time'].dt.dayofweek
+
     if month != 'all':
-        df = df[df['Start Time'].dt.month == month]
+        months = ['january', 'february', 'march', 'april', 'may', 'june']
+        month = months.index(month) + 1
+        df = df[df['month'] == month]
     if dayofweek != 'all':
-        df = df[df['Start Time'].dt.dayofweek == dayofweek]
+        daysofweek = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday']
+        dayofweek = daysofweek.index(dayofweek)
+        df = df[df['dayofweek']==dayofweek]
     return df
 
 
@@ -124,13 +131,16 @@ def time_stats(df):
     start_time = time.time()
 
     # display the most common month
-
-
+    mode_month = df['month'].value_counts().sort_values(ascending=False).index.values[0]
+    print('- Most common month:',mode_month,'\n')
+    
     # display the most common day of week
-
+    mode_dayofweek = df['dayofweek'].value_counts().sort_values(ascending=False).index.values[0]
+    print('- Most common day of the week:',mode_dayofweek,'\n')
 
     # display the most common start hour
-
+    mode_start = df['Start Time'].dt.hour.value_counts().sort_values(ascending=False).index.values[0]
+    print('- Most common start hour was:', mode_start,'\n')
 
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
