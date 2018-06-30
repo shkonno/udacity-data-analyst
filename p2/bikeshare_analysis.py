@@ -24,13 +24,13 @@ def get_filters():
     }
    
     def city_prompt():
-        city = input('Which city would you like to know about? Choose one from the following: Chicago, New York City, Washington').lower()
+        city = input('\nWhich city would you like to know about? Choose one from the following: Chicago, New York City, Washington\n').lower()
         for key,value in synonyms_city.items():
             if city in value:
                 city = key
                 return city
             else:
-                print('Please re-enter the name of the city. Remember to choose on from the following: Chicago, New York City, Washington')
+                print('\nPlease re-enter the name of the city. Remember to choose on from the following: Chicago, New York City, Washington\n')
                 city = 0
                 return city
     
@@ -49,7 +49,7 @@ def get_filters():
     }
     
     def month_prompt():
-        month = input('Which month? Choose a month between January and June. Type \'all\' to make no specification.').lower()
+        month = input('\nWhich month? Choose a month between January and June. Type \'all\' to make no specification.\n').lower()
         if month == 'all':
             return month
         for key,value in synonyms_month.items():
@@ -57,7 +57,7 @@ def get_filters():
                 month = key
                 return month 
             else:
-                print('Please re-enter the month. Remember to choose one between January and June.')
+                print('\nPlease re-enter the month. Remember to choose one between January and June.\n')
                 month = 0
                 return month 
     
@@ -78,7 +78,7 @@ def get_filters():
     }
     
     def dayofweek_prompt():
-        dayofweek = input('Which day of week? Choose between Sunday and Saturday.Type \'all\' to make no specification.').lower()
+        dayofweek = input('\nWhich day of week? Choose between Sunday and Saturday.Type \'all\' to make no specification.\n').lower()
         if dayofweek == 'all':
             return dayofweek
         for key,value in synonyms_dayofweek.items():
@@ -86,7 +86,7 @@ def get_filters():
                 dayofweek = key
                 return dayofweek 
             else:
-                print('Please re-enter the day of the week.')
+                print('\nPlease re-enter the day of the week.\n')
                 dayofweek = 0
                 return dayofweek 
     
