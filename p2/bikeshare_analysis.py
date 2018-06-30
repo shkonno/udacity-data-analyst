@@ -49,7 +49,9 @@ def get_filters():
     }
     
     def month_prompt():
-        month = input('Which month? Choose a month between January and June.').lower()
+        month = input('Which month? Choose a month between January and June. Type \'all\' to make no specification.').lower()
+        if month == 'all':
+            return month
         for key,value in synonyms_month.items():
             if month in value:
                 month = key
@@ -76,7 +78,9 @@ def get_filters():
     }
     
     def dayofweek_prompt():
-        dayofweek = input('Which day of week? Choose between Sunday and Saturday.').lower()
+        dayofweek = input('Which day of week? Choose between Sunday and Saturday.Type \'all\' to make no specification.').lower()
+        if dayofweek == 'all':
+            return dayofweek
         for key,value in synonyms_dayofweek.items():
             if dayofweek in value:
                 dayofweek = key
@@ -105,8 +109,11 @@ def load_data(city, month, day):
     Returns:
         df - Pandas DataFrame containing city data filtered by month and day
     """
-
-
+    df = pd.read_csv(CITY_DATA[city])
+    if month != 'all':
+        df = df[df['Start Time'].dt.month == month]
+    if dayofweek != 'all':
+        df = df[df['Start Time'].dt.dayofweek == dayofweek]
     return df
 
 
