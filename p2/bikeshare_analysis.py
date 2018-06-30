@@ -24,8 +24,8 @@ def get_filters():
     }
    
     def city_prompt():
-        city = raw_input('Which city would you like to know about? Choose one from the following: Chicago, New York City, Washington').lower()
-        for key,value in synonyms_city.items:
+        city = input('Which city would you like to know about? Choose one from the following: Chicago, New York City, Washington').lower()
+        for key,value in synonyms_city.items():
             if city in value:
                 city = key
                 return city
@@ -35,7 +35,7 @@ def get_filters():
                 return city
     
     city = city_prompt()
-    while not city:
+    while city is False:
         city_prompt()
     
     # get user input for month (all, january, february, ... , june)
@@ -49,8 +49,8 @@ def get_filters():
     }
     
     def month_prompt():
-        month = raw_input('Which month? Choose a month between January and June.').lower()
-        for key,value in synonyms_month.items:
+        month = input('Which month? Choose a month between January and June.').lower()
+        for key,value in synonyms_month.items():
             if month in value:
                 month = key
                 return month 
@@ -60,7 +60,7 @@ def get_filters():
                 return month 
     
     month = month_prompt()
-    while not month:
+    while month is False:
         month_prompt()
     
     # get user input for day of week (all, monday, tuesday, ... sunday)
@@ -76,8 +76,8 @@ def get_filters():
     }
     
     def dayofweek_prompt():
-        dayofweek = raw_input('Which day of week? Choose between Sunday and Saturday.')
-        for key,value in synonyms_dayofweek.items:
+        dayofweek = input('Which day of week? Choose between Sunday and Saturday.').lower()
+        for key,value in synonyms_dayofweek.items():
             if dayofweek in value:
                 dayofweek = key
                 return dayofweek 
@@ -87,11 +87,11 @@ def get_filters():
                 return dayofweek 
     
     dayofweek = dayofweek_prompt()
-    while not dayofweek:
+    while dayofweek is False:
         dayofweek_prompt()
 
     print('-'*40)
-    return city, month, day
+    return city, month, dayofweek
 
 
 def load_data(city, month, day):
