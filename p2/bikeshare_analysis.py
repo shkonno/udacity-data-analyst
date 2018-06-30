@@ -15,84 +15,102 @@ def get_filters():
         (str) month - name of the month to filter by, or "all" to apply no month filter
         (str) day - name of the day of week to filter by, or "all" to apply no day filter
     """
-    print('Hello! Let\'s explore some US bikeshare data!')
-    # get user input for city (chicago, new york city, washington). HINT: Use a while loop to handle invalid inputs
-    synonyms_city= {
-        'chicago': ['chicago','chi'],
-        'new york city': ['new york city', 'new york', 'newyork', 'newyorkcity', 'nyc'],
-        'washington': ['washington']
-    }
    
-    def city_prompt():
+    def prompt_city():
         city = input('\nWhich city would you like to know about? Choose one from the following: Chicago, New York City, Washington\n').lower()
+        return city    
+    
+    def validate_city(city):
+        synonyms_city= {
+            'chicago': ['chicago','chi'],
+            'new york city': ['new york city', 'new york', 'newyork', 'newyorkcity', 'nyc'],
+            'washington': ['washington']
+            }
+        
+        city_valid = False
         for key,value in synonyms_city.items():
             if city in value:
                 city = key
-                return city
-            else:
-                print('\nPlease re-enter the name of the city. Remember to choose on from the following: Chicago, New York City, Washington\n')
-                city = 0
-                return city
+                city_valid = True
+                return city,city_valid
+        return city, city_valid
+
+    def prompt_month():
+        month = input('\nWhich month? Choose between January and June. Type \'all\' to make no specification.\n').lower()
+        return month    
     
-    city = city_prompt()
-    while city is False:
-        city_prompt()
-    
-    # get user input for month (all, january, february, ... , june)
-    synonyms_month= {
-        'january': ['jan','january'],
-        'february': ['feb', 'february'],
-        'march': ['mar','march'],
-        'april': ['apr','april'],
-        'may': ['may'],
-        'june': ['jun','june']
-    }
-    
-    def month_prompt():
-        month = input('\nWhich month? Choose a month between January and June. Type \'all\' to make no specification.\n').lower()
+    def validate_month(month):
+        synonyms_month= {
+            'january': ['jan','january'],
+            'february': ['feb', 'february'],
+            'march': ['mar','march'],
+            'april': ['apr','april'],
+            'may': ['may'],
+            'june': ['jun','june']
+            }
+        
+        month_valid = False
         if month == 'all':
-            return month
+            month_valid = True
+            return month, month_valid
         for key,value in synonyms_month.items():
             if month in value:
                 month = key
-                return month 
-            else:
-                print('\nPlease re-enter the month. Remember to choose one between January and June.\n')
-                month = 0
-                return month 
-    
-    month = month_prompt()
-    while month is False:
-        month_prompt()
-    
-    # get user input for day of week (all, monday, tuesday, ... sunday)
+                month_valid = True
+                return month, month_valid
+        return month, month_valid
 
-    synonyms_dayofweek= {
-        'monday': ['mon','monday'],
-        'tuesday': ['tue', 'tuesday'],
-        'wednesday': ['wed','wednesday'],
-        'thursday': ['thurs','thursday'],
-        'friday': ['fri','friday'],
-        'saturday': ['sat','saturday'],
-        'sunday': ['sun','sunday']
-    }
-    
-    def dayofweek_prompt():
-        dayofweek = input('\nWhich day of week? Choose between Sunday and Saturday.Type \'all\' to make no specification.\n').lower()
+    def prompt_dayofweek():
+        dayofweek = input('\nWhich day of week? Choose between Sunday and Saturday. Type \'all\' to make no specification.\n').lower()
+        return dayofweek
+
+    def validate_dayofweek(dayofweek):
+        synonyms_dayofweek= {
+            'monday': ['mon','monday'],
+            'tuesday': ['tue', 'tuesday'],
+            'wednesday': ['wed','wednesday'],
+            'thursday': ['thurs','thursday'],
+            'friday': ['fri','friday'],
+            'saturday': ['sat','saturday'],
+            'sunday': ['sun','sunday']
+        }
+
+        dayofweek_valid = False
         if dayofweek == 'all':
+            dayofweek = True
             return dayofweek
         for key,value in synonyms_dayofweek.items():
             if dayofweek in value:
                 dayofweek = key
-                return dayofweek 
-            else:
-                print('\nPlease re-enter the day of the week.\n')
-                dayofweek = 0
-                return dayofweek 
+                dayofweek_valid = True
+                return dayofweek,dayofweek_valid
+        return dayofweek,dayofweek_valid
+
+    print('Hello! Let\'s explore some US bikeshare data!')
+
+    # get user input for city (chicago, new york city, washington). HINT: Use a while loop to handle invalid inputs
+    input_city = prompt_city()
+    city,city_valid = validate_city(input_city)
+    while city_valid == False:
+        print('Unfortunately, that city does not seem to be included in our data. Please try another city..')
+        input_city = prompt_city() 
+        city, city_valid = validate_city(input_city)
     
-    dayofweek = dayofweek_prompt()
-    while dayofweek is False:
-        dayofweek_prompt()
+    # get user input for month (all, january, february, ... , june)
+    input_month = prompt_month()
+    month,month_valid = validate_month(input_month)
+    while month_valid == False:
+        print('Unfortunately, we do not have that month in our data. Please try another one..')
+        input_month = prompt_month()
+        month, month_valid = validate_month(input_month)
+    
+    # get user input for day of week (all, monday, tuesday, ... sunday)
+    input_dayofweek = prompt_dayofweek()
+    dayofweek, dayofweek_valid = validate_dayofweek(input_dayofweek)
+    while dayofweek_valid == False:
+        print('We could\'nt quite catch that..\n')
+        input_dayofweek = prompt_dayofweek()
+        dayofweek, dayofweek_valid = validate_dayofweek(input_dayofweek)
 
     print('-'*40)
     return city, month, dayofweek
@@ -110,6 +128,7 @@ def load_data(city, month, day):
         df - Pandas DataFrame containing city data filtered by month and day
     """
     df = pd.read_csv(CITY_DATA[city])
+    df['Start Time'] = pd.to_datetime(df['Start Time'])
     df['month'] = df['Start Time'].dt.month
     df['dayofweek'] = df['Start Time'].dt.dayofweek
 
@@ -153,13 +172,16 @@ def station_stats(df):
     start_time = time.time()
 
     # display most commonly used start station
-
-
+    mode_startstation = df['Start Station'].value_counts().sort_values(ascending=False).index.values[0]
+    print('- Most common start station:',mode_startstation,'\n')
+   
     # display most commonly used end station
-
+    mode_endstation = df['End Station'].value_counts().sort_values(ascending=False).index.values[0]
+    print('- Most common end station:',mode_endstation,'\n')
 
     # display most frequent combination of start station and end station trip
-
+    mode_comb_station = df[['Start Station','End Station']].value_counts().sort_values(ascending=False).index.values[0]
+    print('- Most common combination of start/end stations:', mode_comb_station)
 
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
@@ -207,8 +229,8 @@ def main():
 
         time_stats(df)
         station_stats(df)
-        trip_duration_stats(df)
-        user_stats(df)
+        # trip_duration_stats(df)
+        # user_stats(df)
 
         restart = input('\nWould you like to restart? Enter yes or no.\n')
         if restart.lower() != 'yes':
