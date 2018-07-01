@@ -255,12 +255,18 @@ def user_stats(df):
 
 def display_rawdata(df):
     if input('Do you want to see raw data? Yes/No\n').lower() in ['y','yes','yup']:
+        display_next = True
         n = 0
-        while n < (df.shape[0]-4):
-            print(df.iloc[n:n+5])
-            n += 5
+        while display_next:
+            if n < (df.shape[0]-4):
+                print(df.iloc[n:n+5])
+                n += 5
+            else:
+                print(df.iloc[n:])
+                break 
+           
             if input('Do you want to see more? Yes/No\n').lower() not in ['y','yes','yup']:
-                break
+                display_next = False
 
 def main():
     while True:
