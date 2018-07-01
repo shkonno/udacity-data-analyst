@@ -214,6 +214,19 @@ def trip_duration_stats(df):
     print('-'*40)
 
 
+def user_stats_limiteddata(df):
+    """Displays statistics on bikeshare users."""
+
+    print('\nCalculating User Stats...\n')
+    start_time = time.time()
+
+    # Display counts of user types
+    count_user_type = df['User Type'].value_counts()
+    print('- Count of user types:\n',count_user_type)
+    
+    print("\nThis took %s seconds." % (time.time() - start_time))
+    print('-'*40)
+
 def user_stats(df):
     """Displays statistics on bikeshare users."""
 
@@ -240,6 +253,14 @@ def user_stats(df):
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
 
+def display_rawdata(df):
+    if input('Do you want to see raw data? Yes/No\n').lower() in ['y','yes','yup']:
+        n = 0
+        while n < (df.shape[0]-4):
+            print(df.iloc[n:n+5])
+            n += 5
+            if input('Do you want to see more? Yes/No').lower() not in ['y','yes','yup']:
+                break
 
 def main():
     while True:
@@ -249,7 +270,13 @@ def main():
         time_stats(df)
         station_stats(df)
         trip_duration_stats(df)
-        user_stats(df)
+        
+        if city == 'washington':
+            user_stats_limiteddata(df)
+        else:
+            user_stats(df)
+        
+        display_rawdata(df)
 
         restart = input('\nWould you like to restart? Enter yes or no.\n')
         if restart.lower() != 'yes':
