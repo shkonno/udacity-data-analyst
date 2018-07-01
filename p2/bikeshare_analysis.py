@@ -259,7 +259,7 @@ def display_rawdata(df):
         while n < (df.shape[0]-4):
             print(df.iloc[n:n+5])
             n += 5
-            if input('Do you want to see more? Yes/No').lower() not in ['y','yes','yup']:
+            if input('Do you want to see more? Yes/No\n').lower() not in ['y','yes','yup']:
                 break
 
 def main():
